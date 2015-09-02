@@ -1,0 +1,10 @@
+pom.xml
+*jar
+/target/
+.lein-deps-sum
+.lein-repl-history
+.lein-plugins/
+.repl
+.nrepl-port
+
+/resources/public

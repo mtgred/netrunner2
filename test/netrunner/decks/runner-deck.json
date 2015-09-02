@@ -1,0 +1,116 @@
+{
+    "side": "Runner",
+    "name": "Worlds 2013 Winner",
+    "cards": [
+      {
+        "qty": 3,
+        "card": "Account Siphon"
+      },
+      {
+        "qty": 3,
+        "card": "Inside Job"
+      },
+      {
+        "qty": 3,
+        "card": "Special Order"
+      },
+      {
+        "qty": 3,
+        "card": "Emergency Shutdown"
+      },
+      {
+        "qty": 2,
+        "card": "Forged Activation Orders"
+      },
+      {
+        "qty": 2,
+        "card": "Easy Mark"
+      },
+      {
+        "qty": 2,
+        "card": "Hostage"
+      },
+      {
+        "qty": 3,
+        "card": "Sure Gamble"
+      },
+      {
+        "qty": 3,
+        "card": "Dirty Laundry"
+      },
+      {
+        "qty": 3,
+        "card": "Desperado"
+      },
+      {
+        "qty": 2,
+        "card": "Plascrete Carapace"
+      },
+      {
+        "qty": 2,
+        "card": "R&D Interface"
+      },
+      {
+        "qty": 2,
+        "card": "Faerie"
+      },
+      {
+        "qty": 1,
+        "card": "Femme Fatale"
+      },
+      {
+        "qty": 1,
+        "card": "Crypsis"
+      },
+      {
+        "qty": 2,
+        "card": "Corroder"
+      },
+      {
+        "qty": 1,
+        "card": "Mimic"
+      },
+      {
+        "qty": 1,
+        "card": "Yog.0"
+      },
+      {
+        "qty": 3,
+        "card": "Datasucker"
+      },
+      {
+        "qty": 1,
+        "card": "Kati Jones"
+      },
+      {
+        "qty": 1,
+        "card": "John Masanori"
+      },
+      {
+        "qty": 1,
+        "card": "Professional Contacts"
+      }
+    ],
+    "identity": {
+      "cyclenumber": 2,
+      "side": "Runner",
+      "minimumdecksize": 45,
+      "title": "Andromeda: Dispossessed Ristie",
+      "subtype": "Natural",
+      "type": "Identity",
+      "illustrator": "Matt Zeilinger",
+      "faction": "Criminal",
+      "flavor": "\"I run with the best.\"",
+      "influencelimit": 15,
+      "uniqueness": false,
+      "number": 83,
+      "set_code": "hs",
+      "baselink": 1,
+      "quantity": 3,
+      "text": "You draw a starting hand of 9 cards.",
+      "code": "02083",
+      "setname": "Humanity's Shadow"
+    },
+    "date": "2014-07-16T08:38:02.068Z",
+    "username": "__demo__"
+  }

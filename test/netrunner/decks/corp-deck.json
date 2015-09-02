@@ -1,0 +1,122 @@
+{
+    "side": "Corp",
+    "name": "Worlds 2013 Winner",
+    "cards": [
+      {
+        "qty": 3,
+        "card": "Accelerated Beta Test"
+      },
+      {
+        "qty": 3,
+        "card": "Project Vitruvius"
+      },
+      {
+        "qty": 3,
+        "card": "Efficiency Committee"
+      },
+      {
+        "qty": 1,
+        "card": "Director Haas' Pet Project"
+      },
+      {
+        "qty": 1,
+        "card": "Gila Hands Arcology"
+      },
+      {
+        "qty": 3,
+        "card": "Adonis Campaign"
+      },
+      {
+        "qty": 3,
+        "card": "Jackson Howard"
+      },
+      {
+        "qty": 2,
+        "card": "Ash 2X3ZB9CY"
+      },
+      {
+        "qty": 2,
+        "card": "SanSan City Grid"
+      },
+      {
+        "qty": 3,
+        "card": "Biotic Labor"
+      },
+      {
+        "qty": 2,
+        "card": "Green Level Clearance"
+      },
+      {
+        "qty": 3,
+        "card": "Hedge Fund"
+      },
+      {
+        "qty": 3,
+        "card": "Eli 1.0"
+      },
+      {
+        "qty": 1,
+        "card": "Heimdall 1.0"
+      },
+      {
+        "qty": 2,
+        "card": "Wall of Static"
+      },
+      {
+        "qty": 2,
+        "card": "Ice Wall"
+      },
+      {
+        "qty": 1,
+        "card": "Viper"
+      },
+      {
+        "qty": 1,
+        "card": "Viktor 2.0"
+      },
+      {
+        "qty": 2,
+        "card": "Enigma"
+      },
+      {
+        "qty": 2,
+        "card": "Pop-up Window"
+      },
+      {
+        "qty": 1,
+        "card": "Tollbooth"
+      },
+      {
+        "qty": 3,
+        "card": "Rototurret"
+      },
+      {
+        "qty": 1,
+        "card": "Ichi 1.0"
+      },
+      {
+        "qty": 1,
+        "card": "Grim"
+      }
+    ],
+    "identity": {
+      "cyclenumber": 1,
+      "side": "Corp",
+      "minimumdecksize": 45,
+      "title": "Haas-Bioroid: Engineering the Future",
+      "subtype": "Megacorp",
+      "type": "Identity",
+      "faction": "Haas-Bioroid",
+      "flavor": "Effective. Reliable. Humane.",
+      "influencelimit": 15,
+      "uniqueness": false,
+      "number": 54,
+      "set_code": "core",
+      "quantity": 1,
+      "text": "The first time you install a card each turn, gain 1[Credits].",
+      "code": "01054",
+      "setname": "Core Set"
+    },
+    "date": "2014-07-16T08:42:39.791Z",
+    "username": "__demo__"
+  }
