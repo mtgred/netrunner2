@@ -6,6 +6,8 @@
                  [http-kit "2.1.19"]
                  [compojure "1.4.0"]
                  [hiccup "1.0.5"]
+                 [danlentz/clj-uuid "0.1.6"]
+                 [cheshire "5.5.0"]
                  [reagent "0.5.0"]]
 
   :source-paths ["src/clj" "src/cljs"]
