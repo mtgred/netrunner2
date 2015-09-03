@@ -13,3 +13,7 @@
    (into {} (for [item coll] [(key item) item])))
   ([key f coll]
    (into {} (for [item coll] [(key item) (f item)]))))
+
+(defn remove-card [card coll]
+  (let [[head tail] (split-with #(not= (:cid %) (:cid card)) coll)]
+    (vec (concat head (rest tail)))))
