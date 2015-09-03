@@ -17,3 +17,12 @@
   (expect 42 (count (get-in new-state [:corp :deck])))
   (expect (:cid (last (get-in new-state [:corp :discard])))
           (:cid (second (get-in state [:corp :deck])))))
+
+(let [new-state (c/gain state :runner :memory 1 :credit 3 :tag 2)]
+  (expect 5 (get-in new-state [:runner :memory]))
+  (expect 8 (get-in new-state [:runner :credit]))
+  (expect 2 (get-in new-state [:runner :tag])))
+
+(let [new-state (c/lose state :runner :credit :all :memory 2)]
+  (expect 0 (get-in new-state [:runner :credit]))
+  (expect 2 (get-in new-state [:runner :memory])))
