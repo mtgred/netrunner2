@@ -1,6 +1,7 @@
 (ns netrunner.core-test
   (:use expectations)
   (:require [netrunner.init-test :refer [corp runner]]
+            [netrunner.macros :refer [effect]]
             [netrunner.init :refer [create-game]]
             [netrunner.core :as c]))
 
@@ -26,3 +27,7 @@
 (let [new-state (c/lose state :runner :credit :all :memory 2)]
   (expect 0 (get-in new-state [:runner :credit]))
   (expect 2 (get-in new-state [:runner :memory])))
+
+(let [new-state ((effect (c/draw 3) (c/gain :credit 1)) state :corp nil nil)]
+  (expect 8 (count (get-in new-state [:corp :hand])))
+  (expect 6 (get-in new-state [:corp :credit])))
