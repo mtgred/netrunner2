@@ -1,7 +1,13 @@
 (ns netrunner.core
-  (:require [netrunner.utils :refer [set-zone remove-card]]))
+  (:require [netrunner.utils :refer [set-zone remove-card]]
+            [netrunner.macros :refer [gfn]]))
 
 (defn card-init [state side card]
+  state)
+
+(defn allowed? [state side action & args]
+  true)
+(defn trigger-event [state side event & args]
   state)
 
 (defn init-game [state]
@@ -26,12 +32,10 @@
                                       0
                                       (- (or %1 0) %2))))
 
-(defn move
-  ([state side card to] (move state side card to nil))
-  ([state side {:keys [zone] :as card} to args]
-   (-> state
-       (update-in [side to] #(conj (vec %) (assoc card :zone to)))
-       (update-in zone #(remove-card card %)))))
+
+(gfn move [{:keys [zone] :as card} to] args nil
+     (update-in [side to] #(conj (vec %) (assoc card :zone to)))
+     (update-in zone #(remove-card card %)))
 
 (defn- move-cards [state side from to n]
   (let [moved (set-zone to (take n (get-in state [side :deck])))]
@@ -39,12 +43,16 @@
          (update-in [side to] #(concat % moved))
          (update-in [side from] #(drop n %)))))
 
-(defn draw
-  ([state side] (draw state side 1))
-  ([state side n]
-   (move-cards state side :deck :hand n)))
+(gfn card-init [card] args nil)
 
-(defn mill
-  ([state side] (mill state side 1))
-  ([state side n]
-   (move-cards state side :deck :discard n)))
+(gfn draw [] n 1
+     (move-cards side :deck :hand n))
+
+(gfn mill [] n 1
+     (move-cards side :deck :discard n))
+
+(gfn play-instant [card] args nil)
+
+(gfn corp-install [card] args nil)
+
+(gfn runner-install [card] args nil)
