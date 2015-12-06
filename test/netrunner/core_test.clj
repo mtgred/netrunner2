@@ -32,7 +32,10 @@
   (expect 8 (count (get-in new-state [:corp :hand])))
   (expect 6 (get-in new-state [:corp :credit])))
 
-(let [ability {:effect (effect (c/draw 3) (c/gain :credit 2))}
-      new-state (c/resolve-effect state :corp nil ability nil)]
+(let [ability {:msg "draw 3 cards and gain 2 [Credits]"
+               :effect (effect (c/draw 3) (c/gain :credit 2))}
+      new-state (c/res state :corp {:title "foobar"} ability)]
+  (expect [{:user "__system__", :text "mtgred uses foobar to draw 3 cards and gain 2 [Credits]."}]
+          (get-in new-state [:log]))
   (expect 8 (count (get-in new-state [:corp :hand])))
   (expect 7 (get-in new-state [:corp :credit])))

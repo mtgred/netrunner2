@@ -15,9 +15,24 @@
 (defn allowed? [state side action & args]
   true)
 
-(afn effect (v side card args))
+(defn say [state side {:keys [user text]}]
+  (let [author (or user (get-in state [side :user]))]
+    (update-in state [:log] #(conj % {:user author :text text}))))
 
-(gfn res [card {:keys [effect :as ability]}] args nil
+(defn system-msg [state side text]
+  (let [username (get-in state [side :user :username])]
+    (say state side {:user "__system__" :text (str username " " text ".")})))
+
+(afn msg (let [msg (if (string? v)
+                     v
+                     (v state side card args))]
+           (system-msg state side (str "uses " (:title card) " to " msg))))
+
+(afn effect (v state side card args))
+
+
+(gfn res [card ability] args nil
+     (resolve-msg side card ability args)
      (resolve-effect side card ability args))
 
 (defn update-values [state side deltas f]
