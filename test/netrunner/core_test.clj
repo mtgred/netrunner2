@@ -31,3 +31,8 @@
 (let [new-state ((effect (c/draw 3) (c/gain :credit 1)) state :corp nil nil)]
   (expect 8 (count (get-in new-state [:corp :hand])))
   (expect 6 (get-in new-state [:corp :credit])))
+
+(let [ability {:effect (effect (c/draw 3) (c/gain :credit 2))}
+      new-state (c/resolve-effect state :corp nil ability nil)]
+  (expect 8 (count (get-in new-state [:corp :hand])))
+  (expect 7 (get-in new-state [:corp :credit])))

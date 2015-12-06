@@ -1,12 +1,10 @@
 (ns netrunner.core
   (:require [netrunner.utils :refer [set-zone remove-card]]
-            [netrunner.macros :refer [gfn]]))
+            [netrunner.macros :refer [gfn afn]]))
 
 (defn card-init [state side card]
   state)
 
-(defn allowed? [state side action & args]
-  true)
 (defn trigger-event [state side event & args]
   state)
 
@@ -14,6 +12,13 @@
   (-> state
       (card-init :corp (get-in state [:corp :identity]))
       (card-init :runner (get-in state [:runner :identity]))))
+(defn allowed? [state side action & args]
+  true)
+
+(afn effect (v side card args))
+
+(gfn res [card {:keys [effect :as ability]}] args nil
+     (resolve-effect side card ability args))
 
 (defn update-values [state side deltas f]
   (loop [ds (partition 2 deltas)

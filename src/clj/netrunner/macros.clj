@@ -23,3 +23,9 @@
               ~@expr
               (~'trigger-event ~'side ~(keyword name) ~@full-args))
           ~'state)))))
+
+(defmacro afn [name & expr]
+  `(defn ~(symbol (str "resolve-" name)) ~['state 'side 'card 'ability 'args]
+     (if-let [~'v (~(keyword name) ~'ability)]
+       (-> ~'state ~@expr)
+       ~'state)))
