@@ -13,6 +13,10 @@
               (assoc %1 key (+ (or (key %1) 0) value)))
            {} (partition 2 (flatten costs)))))
 
+(defn has? [card property value]
+  (when-let [p (property card)]
+    (> (.indexOf p value) -1)))
+
 (defn key-map
   ([key coll]
    (into {} (for [item coll] [(key item) item])))
