@@ -5,7 +5,7 @@
             [netrunner.init :refer [create-game]]
             [netrunner.core :as c]))
 
-(def state (c/init-game (create-game corp runner)))
+(def state (create-game corp runner))
 
 (let [new-state (c/draw state :corp)]
   (expect 6 (count (get-in new-state [:corp :hand])))

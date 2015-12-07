@@ -1,7 +1,8 @@
 (ns netrunner.init
   (:require [clj-uuid :as uuid]
             [cheshire.core :refer [parse-string]]
-            [netrunner.utils :refer [to-keyword set-zone key-map]]))
+            [netrunner.utils :refer [to-keyword set-zone key-map]]
+            [netrunner.core :refer [card-init]]))
 
 (defn trim-card [card]
   (-> card
@@ -21,20 +22,20 @@
 (defn create-player [side player]
   (let [cards (shuffle (parse-deck (:deck player)))
         data {:user (:user player)
-               :identity (if-let [card (get-in player [:deck :identity])]
-                           (trim-card card)
-                           {:side side :type "Identity"})
-               :deck (set-zone [side :deck] (drop 5 cards))
-               :hand (set-zone [side :hand] (take 5 cards))
-               :discard []
-               :scored []
-               :rfg []
-               :play-area []
-               :click 0
-               :credit 5
-               :agenda-point 0
-               :max-hand-size 5
-               :keep false}]
+              :identity (if-let [card (get-in player [:deck :identity])]
+                          (trim-card card)
+                          {:side side :type "Identity"})
+              :deck (set-zone [side :deck] (drop 5 cards))
+              :hand (set-zone [side :hand] (take 5 cards))
+              :discard []
+              :scored []
+              :rfg []
+              :play-area []
+              :click 0
+              :credit 5
+              :agenda-point 0
+              :max-hand-size 5
+              :keep false}]
     (if (= side :corp)
       (assoc data
              :servers {:hq {} :rd{} :archives {} :remote []}
@@ -52,10 +53,16 @@
              :brain-damage 0
              :click-per-turn 4))))
 
-(defn create-game [corp runner]
+(defn create-state [corp runner]
   {:gameid (uuid/v1)
    :log []
    :active-player :runner
    :end-turn true
    :corp (create-player :corp corp)
    :runner (create-player :runner runner)})
+
+(defn create-game [corp runner]
+  (let [state (create-state corp runner)]
+    (-> state
+        (card-init :corp (get-in state [:corp :identity]))
+        (card-init :runner (get-in state [:runner :identity])))))
