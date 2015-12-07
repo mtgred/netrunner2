@@ -32,10 +32,17 @@
   (expect 8 (count (get-in new-state [:corp :hand])))
   (expect 6 (get-in new-state [:corp :credit])))
 
-(let [ability {:msg "draw 3 cards and gain 2 [Credits]"
-               :effect (effect (c/draw 3) (c/gain :credit 2))}
-      new-state (c/res state :corp {:title "foobar"} ability)]
-  (expect [{:user "__system__", :text "mtgred uses foobar to draw 3 cards and gain 2 [Credits]."}]
+(expect false (c/can-pay? state :runner [:click 1]))
+(expect false (c/can-pay? state :runner [:credit 2 :credit 4]))
+(expect false (c/can-pay? state :corp [:credit 1 :tag 2 :credit 3]))
+(expect true (c/can-pay? state :runner [:credit 1 :memory 5 :credit 3]))
+
+(let [ability {:costs [:credit 2 :memory 1]
+               :msg "draw 3 cards and gain 4 [Credits]"
+               :effect (effect (c/draw 3) (c/gain :credit 4))}
+      new-state (c/res state :runner {:title "foobar"} ability)]
+  (expect [{:user "__system__", :text "Karen uses foobar to draw 3 cards and gain 4 [Credits]."}]
           (get-in new-state [:log]))
-  (expect 8 (count (get-in new-state [:corp :hand])))
-  (expect 7 (get-in new-state [:corp :credit])))
+  (expect 3 (get-in new-state [:runner :memory]))
+  (expect 8 (count (get-in new-state [:runner :hand])))
+  (expect 7 (get-in new-state [:runner :credit])))

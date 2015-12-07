@@ -8,6 +8,11 @@
 (defn set-zone [z coll]
   (map #(assoc % :zone z) coll))
 
+(defn merge-costs [costs]
+  (vec (reduce #(let [key (first %2) value (last %2)]
+              (assoc %1 key (+ (or (key %1) 0) value)))
+           {} (partition 2 (flatten costs)))))
+
 (defn key-map
   ([key coll]
    (into {} (for [item coll] [(key item) item])))
