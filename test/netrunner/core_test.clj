@@ -2,10 +2,16 @@
   (:use expectations)
   (:require [netrunner.init-test :refer [corp runner]]
             [netrunner.macros :refer [effect]]
-            [netrunner.init :refer [create-game]]
+            [netrunner.init :refer [create-game card-data]]
             [netrunner.core :as c]))
 
 (def state (create-game corp runner))
+
+(defn create-card [state side cardname zone]
+  (assoc (card-data cardname) :zone [:corp :hand] :cid 99))
+
+(defn add-card [state side card]
+  (update-in state [side :hand] conj card))
 
 (let [new-state (c/draw state :corp)]
   (expect 6 (count (get-in new-state [:corp :hand])))
@@ -31,6 +37,14 @@
 (let [new-state ((effect (c/draw 3) (c/gain :credit 1)) state :corp nil nil)]
   (expect 8 (count (get-in new-state [:corp :hand])))
   (expect 6 (get-in new-state [:corp :credit])))
+
+(let [card (create-card state :corp "Blue Level Clearance" :hand)
+      s (add-card state :corp card)
+      new-state (c/move state :corp card :discard)]
+  (expect 6 (count (get-in s [:corp :hand])))
+  (expect 5 (count (get-in new-state [:corp :hand])))
+  (expect 1 (count (get-in new-state [:corp :discard])))
+  (expect (:cid card) (:cid (first (get-in new-state [:corp :discard])))))
 
 (expect false (c/can-pay? state :runner [:click 1]))
 (expect false (c/can-pay? state :runner [:credit 2 :credit 4]))
