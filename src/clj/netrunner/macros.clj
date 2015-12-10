@@ -12,6 +12,17 @@
            (-> ~'state
                ~@actions)))))
 
+(defmacro req [& expr]
+  `(fn ~['state 'side 'card 'args]
+     (let ~['runner '(:runner state)
+            'corp '(:corp state)
+            'run '(:run state)
+            'corp-reg '(get-in state [:corp :register])
+            'runner-reg '(get-in state [:runner :register])
+            'target '(first (:targets args))
+            'tagged '(or (> (:tagged runner) 0) (> (:tag runner) 0))]
+        ~@expr)))
+
 (defmacro gfn [name args opt default & expr]
   (let [params (vec (concat ['state 'side] args))
         full-args (conj args opt)]

@@ -1,6 +1,11 @@
 (ns netrunner.core
-  (:require [netrunner.utils :refer [set-zone remove-card merge-costs]]
+  (:require [netrunner.utils :refer [set-zone remove-card merge-costs has?]]
             [netrunner.macros :refer [gfn afn effect]]))
+
+(def cards (atom {}))
+
+(defn defcard [name & r]
+  (swap! cards assoc name (apply hash-map r)))
 
 (defn card-init [state side card]
   state)
@@ -59,18 +64,19 @@
 
 (defn res
   ([state side card ability] (res state side card ability nil))
-  ([state side card {:keys [req costs] :as ability} args]
-   (if (and (can-pay? state side costs)
-            (or (not req) (req state side card args)))
-     (-> state
-         (pay side costs)
-         (resolve-msg side card ability args)
-         (resolve-effect side card ability args))
-     state)))
+  ([state side card {:keys [req costs additional-costs] :as ability} args]
+   (let [total-costs (concat costs additional-costs)]
+     (if (and (can-pay? state side total-costs)
+              (or (not req) (req state side card args)))
+       (-> state
+           (pay side total-costs)
+           (resolve-msg side card ability args)
+           (resolve-effect side card ability args))
+       state))))
 
-(gfn move [{:keys [zone] :as card} to] args nil
-     (update-in [side to] #(conj (vec %) (assoc card :zone to)))
-     (update-in zone #(remove-card card %)))
+(gfn move [card to] args nil
+     (update-in [side to] #(conj (vec %) (assoc card :zone [side to])))
+     (update-in (:zone card) #(remove-card card %)))
 
 (defn- move-cards [state side from to n]
   (let [moved (set-zone to (take n (get-in state [side :deck])))]
@@ -86,8 +92,27 @@
 (gfn mill [] n 1
      (move-cards side :deck :discard n))
 
-(gfn play-instant [card] args nil)
+(defn- get-card [state side card zone]
+  (some #(when (= (:cid %) (:cid card)) %) (get-in state [side zone])))
+
+(defn play-instant
+  ([state side card] (play-instant state side card nil))
+  ([state side card {:keys [extra-costs] :as args}]
+   (let [cdef (@cards (:title card))
+         ability (merge cdef {:costs (concat [:credit (:cost card)] extra-costs)})
+         ability (update-in ability [:additional-costs]
+                            concat (when (has? card :subtype "Double") [:click 1]))]
+     (-> state
+         (move side card :play-area)
+         (res side card ability)
+         (move side (get-card state side card :play-area) :discard)))))
 
 (gfn corp-install [card] args nil)
 
 (gfn runner-install [card] args nil)
+(defn play [state side {:keys [card server]}]
+  (let [cdef (@cards (:title card))]
+    (case (:type card)
+      ("Event" "Operation") (play-instant state side card {:extra-costs [:click 1]})
+      ("Hardware" "Resource" "Program") (runner-install state side card {:extra-costs [:click 1]})
+      ("ICE" "Upgrade" "Asset" "Agenda") (corp-install state side card {:extra-costs [:click 1] :server server}))))
