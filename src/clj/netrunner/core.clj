@@ -92,6 +92,8 @@
 (gfn mill [] n 1
      (move-cards side :deck :discard n))
 
+(gfn purge [] args nil)
+
 (defn- get-card [state side card zone]
   (some #(when (= (:cid %) (:cid card)) %) (get-in state [side zone])))
 
@@ -110,6 +112,19 @@
 (gfn corp-install [card] args nil)
 
 (gfn runner-install [card] args nil)
+
+(gfn click-credit [] args nil
+     (res side nil {:costs [:click 1] :effect (effect (gain :credit 1))}))
+
+(gfn click-draw [] args nil
+     (res side nil {:costs [:click 1] :effect (effect (draw))}))
+
+(gfn click-purge [] args nil
+     (res side nil {:costs [:click 3] :effect (effect (purge))}))
+
+(gfn remove-tag [] args nil
+     (res side nil {:costs [:click 1 :credit 2] :effect (effect (lose :tag 1))}))
+
 (defn play [state side {:keys [card server]}]
   (let [cdef (@cards (:title card))]
     (case (:type card)

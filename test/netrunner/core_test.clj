@@ -60,3 +60,15 @@
   (expect 3 (get-in new-state [:runner :memory]))
   (expect 8 (count (get-in new-state [:runner :hand])))
   (expect 7 (get-in new-state [:runner :credit])))
+
+(let [s (assoc-in state [:runner :click] 4)
+      draw-state (c/click-draw s :runner)
+      credit-state (c/click-credit s :runner)
+      tag-state (-> s (assoc-in [:runner :tag] 5) (c/remove-tag :runner))]
+  (expect 3 (get-in draw-state [:runner :click]))
+  (expect 6 (count (get-in draw-state [:runner :hand])))
+  (expect 39 (count (get-in draw-state [:runner :deck])))
+  (expect 6 (get-in credit-state [:runner :credit]))
+  (expect 3 (get-in credit-state [:runner :click]))
+  (expect 3 (get-in tag-state [:runner :credit]))
+  (expect 4 (get-in tag-state [:runner :tag])))
