@@ -15,7 +15,7 @@
    [:head
     [:meta {:charset "utf-8"}]
     [:title "Jinteki"]
-    (include-css "css/style.css")]
+    (include-css "css/manabase.css")]
    [:body
     [:div#app]
 
