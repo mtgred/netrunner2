@@ -1,0 +1,41 @@
+.topbar
+  position: absolute
+  z-index: 10
+  top: 0
+  left: 0
+  right: 0
+  padding: 0 20px
+  border-bottom: 1px solid transparent-blue-border
+
+  a
+    height: 30px
+    line-height: 29px
+    color: white
+    display: inline-block
+
+    &:hover
+      color: orange
+
+  .active
+    color: orange
+
+  .main-menu
+    float: left
+
+    > a
+      margin-right: 20px
+
+  .side-menu
+    float: right
+
+    a
+      margin-left: 20px
+
+    > div
+      display: inline-block
+
+
+  .dropdown-menu a
+    line-height: 20px
+    &:hover
+      color: white

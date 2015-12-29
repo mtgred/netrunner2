@@ -15,11 +15,13 @@
    [:head
     [:meta {:charset "utf-8"}]
     [:title "Jinteki"]
+    (include-css "css/carousel.css")
     (include-css "css/manabase.css")]
    [:body
     [:div#app]
-
-    (include-js "js/app.js")]))
+    (include-js "lib/jquery/jquery.min.js")
+    (include-js "lib/bootstrap/dist/js/bootstrap.min.js")
+    (include-js "js/app.js")
 
 (defroutes app
   (GET "/" [] index)

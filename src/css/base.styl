@@ -1,0 +1,57 @@
+*
+  -moz-box-sizing: border-box
+  -webkit-box-sizing: border-box
+  box-sizing: border-box
+
+html, body
+  margin: 0
+  padding: 0
+  height: 100%
+  overflow: hidden
+
+body
+  color: text-color
+  background-color: black
+  font-family: "Titillium Web", "Helvetica Neue", sans-serif
+  font-size: 13px
+  line-height: 18px
+
+h1, h2, h3, h4
+  line-height: normal
+  margin: 0 0 8px
+
+h1
+  font-size: 36px
+
+h2
+  font-size: 24px
+
+h3
+  font-size: 18px
+  margin: 0 0 5px
+
+h4
+  font-size: 14px
+  line-height: 18px
+  margin: 0 0 2px
+
+a
+  text-decoration: none
+  color: orange
+  transition(all 0.2s ease-in-out)
+  cursor: pointer
+  &:hover
+    color: blue
+    text-decoration: none
+
+table
+  border-collapse: collapse
+
+.float-right
+  float: right
+  margin-left: 10px;
+
+.blue-shade
+  color: white
+  background-color: transparent-blue
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.1)

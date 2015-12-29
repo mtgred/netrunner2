@@ -23,12 +23,15 @@
     [:div.carousel-inner
      [:div.item.active
       [:div.home-bg]
-      [announcements]
-      [chat]]
+      [:div.container
+       [:h1 "Play Android: Netrunner in your browser"]
+       [announcements]
+       [chat]]]
 
      [:div.item
       [:div.deckbuilder-bg]
-      [deckbuilder]]
+      [:div.container
+       [deckbuilder]]]
 
      [:div.item
       [:div.lobby-bg]
