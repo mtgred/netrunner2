@@ -22,6 +22,9 @@
     (include-js "lib/jquery/jquery.min.js")
     (include-js "lib/bootstrap/dist/js/bootstrap.min.js")
     (include-js "js/app.js")
+    [:audio#ting
+     [:source {:src "/sound/ting.mp3" :type "audio/mp3"}]
+     [:srouce {:src "/sound/ting.mp3" :type "audio/ogg"}]]]))
 
 (defroutes app
   (GET "/" [] index)
