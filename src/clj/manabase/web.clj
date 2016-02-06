@@ -1,14 +1,8 @@
 (ns manabase.web
   (:require [hiccup.page :refer [html5 include-css include-js]]
             [compojure.core :refer [defroutes GET]]
-            [compojure.route :refer [resources not-found]]))
+            [compojure.route :refer [resources]]
 
-(defn page404 []
-  (html5
-   [:head
-    [:title "Not found"]]
-   [:body
-    [:h1 "Not found"]]))
 
 (defn index [req]
   (html5
@@ -29,4 +23,4 @@
 (defroutes app
   (GET "/" [] index)
   (resources "/")
-  (not-found (page404)))
+  (GET "*" [] index))
