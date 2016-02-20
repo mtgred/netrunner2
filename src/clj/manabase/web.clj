@@ -1,7 +1,7 @@
 (ns manabase.web
   (:require [hiccup.page :refer [html5 include-css include-js]]
             [compojure.core :refer [defroutes GET]]
-            [compojure.route :refer [resources]]
+            [compojure.route :refer [resources]]))
 
 
 (defn index [req]
@@ -21,6 +21,5 @@
      [:srouce {:src "/sound/ting.mp3" :type "audio/ogg"}]]]))
 
 (defroutes app
-  (GET "/" [] index)
   (resources "/")
   (GET "*" [] index))
