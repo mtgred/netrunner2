@@ -7,7 +7,11 @@ pom.xml
 .repl
 .nrepl-port
 
+figwheel_server.log
+
 /resources/public/cljs
 /resources/public/css
 /resources/public/lib
 /resources/public/js/app.js
+
+/resources/public/img/cards
