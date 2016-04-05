@@ -19,19 +19,7 @@
 
   :main manabase.system
 
-  :figwheel {:css-dirs ["resources/public/css"]
-             :ring-handler manabase.web/app}
-
-  :profiles {:dev {:plugins [[lein-cljsbuild "1.1.1"]
-                             [lein-figwheel "0.5.0-2"]
-                             [lein-expectations "0.0.8"]
-                             [lein-autoexpect "1.7.0"]]
-                   :dependencies [[expectations "2.1.2"]
-                                  [reloaded.repl "0.1.0"]]
-                   :source-paths ["dev"]
-                   :repl-options {:init-ns user
-                                  :init (go)}
-                   :cljsbuild {:builds [{:source-paths ["src/cljs"]
+  :cljsbuild {:builds [{:source-paths ["src/cljs"]
                                          :figwheel true
                                          :compiler {:output-to "resources/public/js/app.js"
                                                     :output-dir "resources/public/cljs"
@@ -39,4 +27,19 @@
                                                     :asset-path "cljs"
                                                     :optimizations :none
                                                     :recompile-dependents true
-                                                    :source-map true}}]}}})
+                                                    :source-map true}}]}
+
+  :figwheel {:css-dirs ["resources/public/css"]
+             :ring-handler manabase.web/app}
+
+  :profiles {:dev {:plugins [[lein-cljsbuild "1.1.2"]
+                             [lein-figwheel "0.5.0-2"]
+                             [lein-expectations "0.0.8"]
+                             [lein-autoexpect "1.7.0"]]
+                   :dependencies [[expectations "2.1.2"]
+                                  [reloaded.repl "0.1.0"]
+                                  [com.cemerick/piggieback "0.2.1"]
+                                  [figwheel-sidecar "0.5.0-6"]]
+                   :source-paths ["dev"]
+                   :repl-options {:init-ns user
+                                  :init (go)}}})
