@@ -1,5 +1,6 @@
 (ns manabase.web
   (:require [hiccup.page :refer [html5 include-css include-js]]
+            [clojure.data.json :as json]
             [compojure.core :refer [defroutes GET]]
             [compojure.route :refer [resources]]))
 
@@ -20,6 +21,10 @@
      [:source {:src "/sound/ting.mp3" :type "audio/mp3"}]
      [:srouce {:src "/sound/ting.mp3" :type "audio/ogg"}]]]))
 
+(def cards (json/read-str (slurp "data/cards.json")))
+
 (defroutes app
   (resources "/")
+  (GET "/data/cards" [] (json/write-str cards))
   (GET "*" [] index))
+
