@@ -8,7 +8,7 @@
                  [danlentz/clj-uuid "0.1.6"]
                  [re-frame "0.6.0"]
                  [secretary "1.2.3"]
-                 ;; [cheshire "5.5.0"]
+                 [cheshire "5.5.0"]
                  [reagent "0.5.1"]]
 
   :source-paths ["src/clj" "src/cljs"]
