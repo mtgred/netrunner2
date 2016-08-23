@@ -36,7 +36,7 @@
           ~'state)))))
 
 (defmacro afn [name & expr]
-  `(defn ~(symbol (str "resolve-" name)) ~['state 'side 'card 'ability 'args]
+  `(defn ~(symbol (str "resolve-" name)) ~['state 'side 'ability 'card 'options]
      (if-let [~'v (~(keyword name) ~'ability)]
        ~@expr
        ~'state)))

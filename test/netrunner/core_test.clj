@@ -54,7 +54,7 @@
 (let [ability {:costs [:credit 2 :memory 1]
                :msg "draw 3 cards and gain 4 [Credits]"
                :effect (effect (c/draw 3) (c/gain :credit 4))}
-      new-state (c/res state :runner {:title "foobar"} ability)]
+      new-state (c/res state :runner ability {:title "foobar"})]
   (expect [{:user "__system__", :text "Karen uses foobar to draw 3 cards and gain 4 [Credits]."}]
           (get-in new-state [:log]))
   (expect 3 (get-in new-state [:runner :memory]))

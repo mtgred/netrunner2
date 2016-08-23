@@ -26,12 +26,12 @@
 
 (afn msg (let [msg (if (string? v)
                      v
-                     (v state side card args))]
+                     (v state side card options))]
            (system-msg state side (str (when-let [t (:title card)]
                                          (str "uses " t))
                                        " to " msg))))
 
-(afn effect (v state side card args))
+(afn effect (v state side card options))
 
 
 (defn can-pay? [state side costs]
@@ -63,15 +63,16 @@
                                           (max 0 v))))))
 
 (defn res
-  ([state side card ability] (res state side card ability nil))
-  ([state side card {:keys [req costs additional-costs] :as ability} args]
+  ([state side ability] (res state side ability nil nil))
+  ([state side ability card] (res state side ability card nil))
+  ([state side {:keys [req costs additional-costs] :as ability} card options]
    (let [total-costs (concat costs additional-costs)]
      (if (and (can-pay? state side total-costs)
-              (or (not req) (req state side card args)))
+              (or (not req) (req state side card options)))
        (-> state
            (pay side total-costs)
-           (resolve-msg side card ability args)
-           (resolve-effect side card ability args))
+           (resolve-msg side ability card options)
+           (resolve-effect side ability card options))
        state))))
 
 (gfn move [card to] args nil
@@ -99,14 +100,14 @@
 
 (defn play-instant
   ([state side card] (play-instant state side card nil))
-  ([state side card {:keys [extra-costs] :as args}]
+  ([state side card {:keys [extra-costs] :as options}]
    (let [cdef (@cards (:title card))
          ability (merge cdef {:costs (concat [:credit (:cost card)] extra-costs)})
          ability (update-in ability [:additional-costs]
                             concat (when (has? card :subtype "Double") [:click 1]))]
      (-> state
          (move side card :play-area)
-         (res side card ability)
+         (res side ability card)
          (move side (get-card state side card :play-area) :discard)))))
 
 (gfn corp-install [card] args nil)
@@ -114,16 +115,16 @@
 (gfn runner-install [card] args nil)
 
 (gfn click-credit [] args nil
-     (res side nil {:costs [:click 1] :effect (effect (gain :credit 1))}))
+     (res side {:costs [:click 1] :effect (effect (gain :credit 1))}))
 
 (gfn click-draw [] args nil
-     (res side nil {:costs [:click 1] :effect (effect (draw))}))
+     (res side {:costs [:click 1] :effect (effect (draw))}))
 
 (gfn click-purge [] args nil
-     (res side nil {:costs [:click 3] :effect (effect (purge))}))
+     (res side {:costs [:click 3] :effect (effect (purge))}))
 
 (gfn remove-tag [] args nil
-     (res side nil {:costs [:click 1 :credit 2] :effect (effect (lose :tag 1))}))
+     (res side {:costs [:click 1 :credit 2] :effect (effect (lose :tag 1))}))
 
 (defn play [state side {:keys [card server]}]
   (let [cdef (@cards (:title card))]
