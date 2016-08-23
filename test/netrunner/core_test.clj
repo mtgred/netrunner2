@@ -13,7 +13,7 @@
 (defn add-card [state side card]
   (update-in state [side :hand] conj card))
 
-(let [new-state (c/draw state :corp)]
+(let [new-state (c/draw state :corp 1)]
   (expect 6 (count (get-in new-state [:corp :hand])))
   (expect 43 (count (get-in new-state [:corp :deck])))
   (expect (:cid (last (get-in new-state [:corp :hand])))

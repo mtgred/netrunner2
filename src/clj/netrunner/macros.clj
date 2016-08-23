@@ -23,12 +23,12 @@
             'tagged '(or (> (:tagged runner) 0) (> (:tag runner) 0))]
         ~@expr)))
 
-(defmacro gfn [name args opt default & expr]
+(defmacro gfn [name args & expr]
   (let [params (vec (concat ['state 'side] args))
-        full-args (conj args opt)]
+        full-args (conj args 'options)]
     `(defn ~name
-       (~params (~name ~@(conj params default)))
-       (~(conj params opt)
+       (~params (~name ~@(conj params nil)))
+       (~(conj params 'options)
         (if (~'allowed? ~'state ~'side ~(keyword name) ~@full-args)
           (-> ~'state
               ~@expr

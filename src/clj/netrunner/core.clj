@@ -75,7 +75,7 @@
            (resolve-effect side ability card options))
        state))))
 
-(gfn move [card to] args nil
+(gfn move [card to]
      (update-in [side to] #(conj (vec %) (assoc card :zone [side to])))
      (update-in (:zone card) #(remove-card card %)))
 
@@ -85,15 +85,15 @@
          (update-in [side to] #(concat % moved))
          (update-in [side from] #(drop n %)))))
 
-(gfn card-init [card] args nil)
+(gfn card-init [card])
 
-(gfn draw [] n 1
+(gfn draw [n]
      (move-cards side :deck :hand n))
 
-(gfn mill [] n 1
+(gfn mill [n]
      (move-cards side :deck :discard n))
 
-(gfn purge [] args nil)
+(gfn purge [])
 
 (defn- get-card [state side card zone]
   (some #(when (= (:cid %) (:cid card)) %) (get-in state [side zone])))
@@ -110,20 +110,20 @@
          (res side ability card)
          (move side (get-card state side card :play-area) :discard)))))
 
-(gfn corp-install [card] args nil)
+(gfn corp-install [card])
 
-(gfn runner-install [card] args nil)
+(gfn runner-install [card])
 
-(gfn click-credit [] args nil
+(gfn click-credit []
      (res side {:costs [:click 1] :effect (effect (gain :credit 1))}))
 
-(gfn click-draw [] args nil
-     (res side {:costs [:click 1] :effect (effect (draw))}))
+(gfn click-draw []
+     (res side {:costs [:click 1] :effect (effect (draw 1))}))
 
-(gfn click-purge [] args nil
+(gfn click-purge []
      (res side {:costs [:click 3] :effect (effect (purge))}))
 
-(gfn remove-tag [] args nil
+(gfn remove-tag []
      (res side {:costs [:click 1 :credit 2] :effect (effect (lose :tag 1))}))
 
 (defn play [state side {:keys [card server]}]
