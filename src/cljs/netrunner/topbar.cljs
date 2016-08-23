@@ -1,10 +1,9 @@
 (ns netrunner.topbar
-  (:require-macros [secretary.core :refer [defroute]]
-                   [netrunner.macros :refer [pdfn]])
+  (:require-macros [secretary.core :refer [defroute]])
   (:require [re-frame.core :refer [subscribe dispatch]]
             [secretary.core :refer [dispatch!] :as secretary]
             [goog.events :as events]
-            [netrunner.common :refer [user-view]])
+            [netrunner.common :refer [user-view event-handler]])
   (:import [goog.history EventType]
            [goog.history Html5History]))
 
@@ -26,7 +25,7 @@
       ^{:key href}
       [:a {:href href
            :class (when (= @active-page href) "active")
-           :on-click (pdfn (.setToken history href))}
+           :on-click (event-handler #(.setToken history href))}
        text])))
 
 (defn logged-menu [user]

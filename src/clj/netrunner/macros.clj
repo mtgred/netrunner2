@@ -1,10 +1,5 @@
 (ns netrunner.macros)
 
-(defmacro pdfn [& expr]
-  `(fn ~['event]
-     (.preventDefault ~'event)
-     ~@expr))
-
 (defmacro effect [& expr]
   `(fn ~['state 'side 'card 'args]
      ~(let [actions (map #(if (#{:runner :corp} (second %))
