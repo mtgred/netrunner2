@@ -13,6 +13,7 @@
                     (c/play :corp {:card card}))]
   (expect 8 (get-in new-state [:corp :credit]))
   (expect 2 (get-in new-state [:corp :click]))
+  (expect 0 (count (get-in new-state [:corp :play-area])))
   (expect 7 (count (get-in new-state [:corp :hand])))
   (expect 1 (count (get-in new-state [:corp :discard]))))
 

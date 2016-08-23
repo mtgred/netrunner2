@@ -1,5 +1,5 @@
 (ns netrunner.core
-  (:require [netrunner.utils :refer [set-zone remove-card merge-costs has?]]
+  (:require [netrunner.utils :refer [set-zone remove-card merge-costs has? find-first]]
             [netrunner.macros :refer [gfn afn effect]]))
 
 (def cards (atom {}))
@@ -95,8 +95,8 @@
 
 (gfn purge [])
 
-(defn- get-card [state side card zone]
-  (some #(when (= (:cid %) (:cid card)) %) (get-in state [side zone])))
+(defn get-card [state side card zone]
+  (find-first #(= (:cid %) (:cid card)) (get-in state [side zone])))
 
 (defn play-instant
   ([state side card] (play-instant state side card nil))
@@ -105,10 +105,10 @@
          ability (merge cdef {:costs (concat [:credit (:cost card)] extra-costs)})
          ability (update-in ability [:additional-costs]
                             concat (when (has? card :subtype "Double") [:click 1]))]
-     (-> state
-         (move side card :play-area)
-         (res side ability card)
-         (move side (get-card state side card :play-area) :discard)))))
+     (as-> state s
+       (move s side card :play-area)
+       (res s side ability card)
+       (move s side (get-card s side card :play-area) :discard)))))
 
 (gfn corp-install [card])
 

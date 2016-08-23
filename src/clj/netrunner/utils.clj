@@ -1,5 +1,10 @@
 (ns netrunner.utils)
 
+(defn find-first [f coll]
+  (->> coll
+       (filter f)
+       first))
+
 (defn to-keyword [s]
   (when (string? s)
     (keyword (.toLowerCase s))
