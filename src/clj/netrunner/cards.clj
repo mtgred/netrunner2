@@ -3,12 +3,10 @@
             [netrunner.macros :refer [effect req]]))
 
 (defcard "Akamatsu Mem Chip"
-  :effect (effect (gain :memory 1))
-  :leave-play (effect (lose :memory 1)))
+  :in-play [:memory 1])
 
 (defcard "Access to Globalsec"
-  :effect (effect (gain :link 1))
-  :leave-play (effect (lose :link 1)))
+  :in-play [:link 1])
 
 (defcard "Anonymous Tip"
   :effect (effect (draw 3)))
@@ -26,6 +24,9 @@
 (defcard "Blue Level Clearance"
   :effect (effect (gain :credit 5) (draw 2)))
 
+(defcard "Box-E"
+  :in-play [:memory 2 :hand-size-modification 2])
+
 (defcard "Closed Accounts"
   :req (req tagged)
   :effect (effect (lose :runner :credit :all)))
@@ -37,8 +38,7 @@
   :effect (effect (draw 3)))
 
 (defcard "Dyson Mem Chip"
-  :effect (effect (gain :memory 1 :link 1))
-  :leave-play (effect (lose :memory 1 :link 1)))
+  :in-play [:memory 1 :link 1])
 
 (defcard "Easy Mark"
   :effect (effect (gain :credit 3)))

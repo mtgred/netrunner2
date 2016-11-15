@@ -37,3 +37,17 @@
   (expect 4 (get-in new-state [:corp :credit]))
   (expect 5 (get-in new-state2 [:runner :credit]))
   (expect 5 (get-in new-state2 [:corp :credit])))
+
+(let [card (create-card state2 :runner "Dyson Mem Chip" :hand)
+      state3 (-> state2
+                 (add-card :runner card)
+                 (c/play :runner {:card card}))
+      state4 (as-> state3 s
+               (c/trash s :runner (c/get-card s card [:runner :rig :hardware])))]
+  (expect 5 (get-in state3 [:runner :memory]))
+  (expect 1 (get-in state3 [:runner :link]))
+  (expect 1 (count (get-in state3 [:runner :rig :hardware])))
+  (expect 4 (get-in state4 [:runner :memory]))
+  (expect 0 (get-in state4 [:runner :link]))
+  (expect 0 (count (get-in state4 [:runner :rig :hardware])))
+  (expect 1 (count (get-in state4 [:runner :discard]))))

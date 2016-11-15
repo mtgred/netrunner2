@@ -1,5 +1,5 @@
 (ns netrunner.core
-  (:require [netrunner.utils :refer [set-zone remove-card merge-costs has? find-first]]
+  (:require [netrunner.utils :refer [set-zone remove-card merge-costs has? find-first to-keyword]]
             [netrunner.macros :refer [gfn afn effect]]))
 
 (def cards (atom {}))
@@ -7,8 +7,8 @@
 (defn defcard [name & r]
   (swap! cards assoc name (apply hash-map r)))
 
-(defn card-init [state side card]
-  state)
+(defn card-def [card]
+  (@cards (:title card)))
 
 (defn trigger-event [state side event & args]
   state)
@@ -32,7 +32,6 @@
                                        " to " msg))))
 
 (afn effect (v state side card options))
-
 
 (defn can-pay? [state side costs]
   (every? #(or (>= (or (get-in state [side (first %)]) 0) (last %))
@@ -62,6 +61,16 @@
                                           v
                                           (max 0 v))))))
 
+(defn card-init [state side card]
+  (let [{:keys [in-play]} (card-def card)]
+    (as-> state s
+      (if in-play (apply gain s side in-play) state))))
+
+(defn deactivate [state side card]
+  (let [{:keys [in-play]} (card-def card)]
+    (as-> state s
+      (if in-play (apply lose s side in-play) state))))
+
 (defn res
   ([state side ability] (res state side ability nil nil))
   ([state side ability card] (res state side ability card nil))
@@ -75,17 +84,19 @@
            (resolve-effect side ability card options))
        state))))
 
-(gfn move [card to]
-     (update-in [side to] #(conj (vec %) (assoc card :zone [side to])))
-     (update-in (:zone card) #(remove-card card %)))
+(defn move [state side card to]
+  (let [zone (if (sequential? to)
+               (concat [side] to)
+               [side to])]
+    (-> state
+        (update-in zone #(conj (vec %) (assoc card :zone zone)))
+        (update-in (:zone card) #(remove-card card %)))))
 
 (defn- move-cards [state side from to n]
   (let [moved (set-zone to (take n (get-in state [side :deck])))]
      (-> state
          (update-in [side to] #(concat % moved))
          (update-in [side from] #(drop n %)))))
-
-(gfn card-init [card])
 
 (gfn draw [n]
      (move-cards side :deck :hand n))
@@ -95,8 +106,13 @@
 
 (gfn purge [])
 
-(defn get-card [state side card zone]
-  (find-first #(= (:cid %) (:cid card)) (get-in state [side zone])))
+(defn trash [state side card]
+  (-> state
+      (move side card :discard)
+      (deactivate side card)))
+
+(defn get-card [state card zone]
+  (find-first #(= (:cid %) (:cid card)) (get-in state zone)))
 
 (defn play-instant
   ([state side card] (play-instant state side card nil))
@@ -112,7 +128,9 @@
 
 (gfn corp-install [card])
 
-(gfn runner-install [card])
+(gfn runner-install [card]
+     (card-init side card)
+     (move :runner card [:rig (if (:facedown options) :facedown (to-keyword (:type card)))]))
 
 (gfn click-credit []
      (res side {:costs [:click 1] :effect (effect (gain :credit 1))}))

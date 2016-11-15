@@ -6,7 +6,7 @@
        first))
 
 (defn to-keyword [s]
-  (when (string? s)
+  (if (string? s)
     (keyword (.toLowerCase s))
     s))
 
