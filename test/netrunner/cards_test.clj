@@ -10,7 +10,7 @@
 (let [card (create-card state2 :corp "Blue Level Clearance" :hand)
       new-state (-> state2
                     (add-card :corp card)
-                    (c/play :corp {:card card}))]
+                    (c/play :corp card))]
   (expect 8 (get-in new-state [:corp :credit]))
   (expect 2 (get-in new-state [:corp :click]))
   (expect 0 (count (get-in new-state [:corp :play-area])))
@@ -20,7 +20,7 @@
 (let [card (create-card state2 :corp "Hedge Fund" :hand)
       new-state (-> state2
                     (add-card :corp card)
-                    (c/play :corp {:card card}))]
+                    (c/play :corp card))]
   (expect 9 (get-in new-state [:corp :credit]))
   (expect 3 (get-in new-state [:corp :click]))
   (expect 5 (count (get-in new-state [:corp :hand])))
@@ -30,9 +30,9 @@
       s (add-card state2 :corp card)
       new-state (-> s
                     (assoc-in [:runner :tag] 1)
-                    (c/play :corp {:card card}))
+                    (c/play :corp card))
       new-state2 (-> s
-                     (c/play :corp {:card card}))]
+                     (c/play :corp card))]
   (expect 0 (get-in new-state [:runner :credit]))
   (expect 4 (get-in new-state [:corp :credit]))
   (expect 5 (get-in new-state2 [:runner :credit]))
@@ -41,7 +41,7 @@
 (let [card (create-card state2 :runner "Dyson Mem Chip" :hand)
       state3 (-> state2
                  (add-card :runner card)
-                 (c/play :runner {:card card}))
+                 (c/play :runner card))
       state4 (as-> state3 s
                (c/trash s :runner (c/get-card s card [:runner :rig :hardware])))]
   (expect 5 (get-in state3 [:runner :memory]))

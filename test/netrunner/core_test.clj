@@ -7,8 +7,10 @@
 
 (def state (create-game corp runner))
 
-(defn create-card [state side cardname zone]
-  (assoc (card-data cardname) :zone [:corp :hand] :cid 99))
+(defn create-card
+  ([state side cardname zone] (create-card state side cardname zone 99))
+  ([state side cardname zone cid]
+   (assoc (card-data cardname) :zone [:corp :hand] :cid cid)))
 
 (defn add-card [state side card]
   (update-in state [side :hand] conj card))

@@ -144,9 +144,11 @@
 (gfn remove-tag []
      (res side {:costs [:click 1 :credit 2] :effect (effect (lose :tag 1))}))
 
-(defn play [state side {:keys [card server]}]
-  (let [cdef (@cards (:title card))]
-    (case (:type card)
-      ("Event" "Operation") (play-instant state side card {:extra-costs [:click 1]})
-      ("Hardware" "Resource" "Program") (runner-install state side card {:extra-costs [:click 1]})
-      ("ICE" "Upgrade" "Asset" "Agenda") (corp-install state side card {:extra-costs [:click 1] :server server}))))
+(defn play
+  ([state side card] (play state side card nil))
+  ([state side card {:keys [server] :as options}]
+   (let [cdef (@cards (:title card))]
+     (case (:type card)
+       ("Event" "Operation") (play-instant state side card {:extra-costs [:click 1]})
+       ("Hardware" "Resource" "Program") (runner-install state side card {:extra-costs [:click 1]})
+       ("ICE" "Upgrade" "Asset" "Agenda") (corp-install state side card {:extra-costs [:click 1] :server server})))))
