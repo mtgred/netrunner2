@@ -51,3 +51,17 @@
   (expect 0 (get-in state4 [:runner :link]))
   (expect 0 (count (get-in state4 [:runner :rig :hardware])))
   (expect 1 (count (get-in state4 [:runner :discard]))))
+
+(let [card1 (create-card state2 :runner "Employee Strike" :hand 99)
+      card2 (create-card state2 :corp "Targeted Marketing" :hand 100)
+      card3 (create-card state2 :corp "Cerebral Static" :hand 100)
+      state3 (-> state2
+                 (add-card :runner card1)
+                 (add-card :corp card2)
+                 (add-card :corp card3)
+                 (c/play :runner card1))
+      state4 (c/play state3 :corp card2)
+      state5 (c/play state4 :corp card3)]
+  (expect "Employee Strike" (get-in state3 [:current 0 :title]))
+  (expect "Targeted Marketing" (get-in state4 [:current 0 :title]))
+  (expect "Cerebral Static" (get-in state5 [:current 0 :title])))

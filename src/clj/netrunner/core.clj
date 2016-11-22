@@ -114,14 +114,20 @@
 (defn play-instant
   ([state side card] (play-instant state side card nil))
   ([state side card {:keys [extra-costs] :as options}]
-   (let [cdef (@cards (:title card))
-         ability (merge cdef {:costs (concat [:credit (:cost card)] extra-costs)})
-         ability (update-in ability [:additional-costs]
-                            concat (when (has? card :subtype "Double") [:click 1]))]
-     (as-> state s
-       (move s card [side :play-area])
-       (res s side ability card)
-       (move s (get-card s card [side :play-area]) [side :discard])))))
+   (let [ability (-> (card-def card)
+                     (merge {:costs (concat [:credit (:cost card)] extra-costs)})
+                     (update-in [:additional-costs] concat (when (has? card :subtype "Double") [:click 1]))
+                     (update-in [:additional-costs] concat (when (has? card :subtype "Triple") [:click 2])))]
+     (if (has? card :subtype "Current")
+       (as-> state s
+         (trash s side (get-in s [:current 0]))
+         (res s side ability card)
+         (move s card [:current]))
+       (as-> state s
+         (move s card [side :play-area])
+         (res s side ability card)
+         (move s (get-card s card [side :play-area]) [side :discard]))))))
+
 
 (gfn corp-install [card])
 
