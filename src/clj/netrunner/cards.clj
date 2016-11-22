@@ -1,6 +1,6 @@
 (ns netrunner.cards
   (:require [netrunner.core :refer :all]
-            [netrunner.macros :refer [effect req]]))
+            [netrunner.macros :refer [fx req]]))
 
 (defcard "Akamatsu Mem Chip"
   :in-play [:memory 1])
@@ -9,72 +9,76 @@
   :in-play [:link 1])
 
 (defcard "Anonymous Tip"
-  :effect (effect (draw 3)))
+  :effect (fx (draw 3)))
 
 (defcard "Beanstalk Royalties"
-  :effect (effect (gain :credit 3)))
+  :effect (fx (gain :credit 3)))
 
 (defcard "Big Brother"
   :req (req tagged)
-  :effect (effect (gain :runner :tag 2)))
+  :effect (fx (gain :runner :tag 2)))
 
 (defcard "Biotic Labor"
-  :effect (effect (gain :click 2)))
+  :effect (fx (gain :click 2)))
 
 (defcard "Blue Level Clearance"
-  :effect (effect (gain :credit 5) (draw 2)))
+  :effect (fx (gain :credit 5) (draw 2)))
 
 (defcard "Box-E"
   :in-play [:memory 2 :hand-size-modification 2])
 
+(defcard "Corporate Scandal"
+  :effect (fx (gain :corp :bad-publicity 1))
+  :leave-play (fx (lose :corp :bad-publicity 1)))
+
 (defcard "Closed Accounts"
   :req (req tagged)
-  :effect (effect (lose :runner :credit :all)))
+  :effect (fx (lose :runner :credit :all)))
 
 (defcard "Cyberdex Trial"
-  :effect (effect (purge)))
+  :effect (fx (purge)))
 
 (defcard "Diesel"
-  :effect (effect (draw 3)))
+  :effect (fx (draw 3)))
 
 (defcard "Dyson Mem Chip"
   :in-play [:memory 1 :link 1])
 
 (defcard "Easy Mark"
-  :effect (effect (gain :credit 3)))
+  :effect (fx (gain :credit 3)))
 
 (defcard "Fisk Investment Seminar"
-  :effect (effect (draw 3) (draw :runner 3)))
+  :effect (fx (draw 3) (draw :runner 3)))
 
 (defcard "Game Day"
-  :effect (effect (draw (- (:max-hand-size runner) (count (:hand runner))))))
+  :effect (fx (draw (- (:max-hand-size runner) (count (:hand runner))))))
 
 (defcard "Green Level Clearance"
-  :effect (effect (gain :credit 3) (draw)))
+  :effect (fx (gain :credit 3) (draw)))
 
 (defcard "Hedge Fund"
-  :effect (effect (gain :credit 9)))
+  :effect (fx (gain :credit 9)))
 
 (defcard "Lawyer Up"
-  :effect (effect (lose :tag 2) (draw 3)))
+  :effect (fx (lose :tag 2) (draw 3)))
 
 (defcard "Lucky Find"
-  :effect (effect (gain :credit 9)))
+  :effect (fx (gain :credit 9)))
 
 (defcard "Medical Research Fundraiser"
-  :effect (effect (gain :credit 8) (gain :runner :credit 3)))
+  :effect (fx (gain :credit 8) (gain :runner :credit 3)))
 
 (defcard "Quality Time"
-  :effect (effect (draw 5)))
+  :effect (fx (draw 5)))
 
 (defcard "Restructure"
-  :effect (effect (gain :credit 15)))
+  :effect (fx (gain :credit 15)))
 
 (defcard "Subliminal Messaging"
-  :effect (effect (gain :credit 1 :click 1)))
+  :effect (fx (gain :credit 1 :click 1)))
 
 (defcard "Sure Gamble"
-  :effect (effect (gain :credit 9)))
+  :effect (fx (gain :credit 9)))
 
 (defcard "Witness Tampering"
-  :effect (effect (lose :bad-publicity 2)))
+  :effect (fx (lose :bad-publicity 2)))

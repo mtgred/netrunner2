@@ -1,6 +1,6 @@
 (ns netrunner.core
   (:require [netrunner.utils :refer [set-zone remove-card merge-costs has? find-first to-keyword]]
-            [netrunner.macros :refer [gfn afn effect]]))
+            [netrunner.macros :refer [gfn fx]]))
 
 (def cards (atom {}))
 
@@ -24,14 +24,13 @@
   (let [username (get-in state [side :user :username])]
     (say state side {:user "__system__" :text (str username " " text ".")})))
 
-(afn msg (let [msg (if (string? v)
-                     v
-                     (v state side card options))]
-           (system-msg state side (str (when-let [t (:title card)]
-                                         (str "uses " t))
-                                       " to " msg))))
-
-(afn effect (v state side card options))
+(defn resolve-msg [state side msg card options]
+  (let [m (if (string? msg)
+            msg
+            (msg state side card options))]
+    (system-msg state side (str (when-let [t (:title card)]
+                                  (str "uses " t))
+                                " to " m))))
 
 (defn can-pay? [state side costs]
   (every? #(or (>= (or (get-in state [side (first %)]) 0) (last %))
@@ -67,21 +66,23 @@
       (if in-play (apply gain s side in-play) state))))
 
 (defn deactivate [state side card]
-  (let [{:keys [in-play]} (card-def card)]
+  (let [{:keys [in-play leave-play]} (card-def card)]
     (as-> state s
-      (if in-play (apply lose s side in-play) state))))
+      (if leave-play (leave-play s side card nil) s)
+      (if in-play (apply lose s side in-play) s))))
 
 (defn res
   ([state side ability] (res state side ability nil nil))
   ([state side ability card] (res state side ability card nil))
   ([state side {:keys [req costs additional-costs] :as ability} card options]
-   (let [total-costs (concat costs additional-costs)]
+   (let [total-costs (concat costs additional-costs)
+         {:keys [msg effect]} ability]
      (if (and (can-pay? state side total-costs)
               (or (not req) (req state side card options)))
-       (-> state
-           (pay side total-costs)
-           (resolve-msg side ability card options)
-           (resolve-effect side ability card options))
+       (as-> state s
+         (pay s side total-costs)
+         (if msg (resolve-msg s side msg card options) s)
+         (if effect (effect s side card options) s))
        state))))
 
 (defn move [state card zone]
@@ -89,7 +90,7 @@
       (update-in zone #(conj (vec %) (assoc card :zone zone)))
       (update-in (:zone card) #(remove-card card %))))
 
-(defn- move-cards [state side from to n]
+(defn move-cards [state side from to n]
   (let [moved (set-zone to (take n (get-in state [side :deck])))]
      (-> state
          (update-in [side to] #(concat % moved))
@@ -136,16 +137,16 @@
      (move card [:runner :rig (if (:facedown options) :facedown (to-keyword (:type card)))]))
 
 (gfn click-credit []
-     (res side {:costs [:click 1] :effect (effect (gain :credit 1))}))
+     (res side {:costs [:click 1] :effect (fx (gain :credit 1))}))
 
 (gfn click-draw []
-     (res side {:costs [:click 1] :effect (effect (draw 1))}))
+     (res side {:costs [:click 1] :effect (fx (draw 1))}))
 
 (gfn click-purge []
-     (res side {:costs [:click 3] :effect (effect (purge))}))
+     (res side {:costs [:click 3] :effect (fx (purge))}))
 
 (gfn remove-tag []
-     (res side {:costs [:click 1 :credit 2] :effect (effect (lose :tag 1))}))
+     (res side {:costs [:click 1 :credit 2] :effect (fx (lose :tag 1))}))
 
 (defn play
   ([state side card] (play state side card nil))
@@ -154,4 +155,5 @@
      (case (:type card)
        ("Event" "Operation") (play-instant state side card {:extra-costs [:click 1]})
        ("Hardware" "Resource" "Program") (runner-install state side card {:extra-costs [:click 1]})
-       ("ICE" "Upgrade" "Asset" "Agenda") (corp-install state side card {:extra-costs [:click 1] :server server})))))
+       ("ICE" "Upgrade" "Asset" "Agenda") (corp-install state side card {:extra-costs [:click 1] :server server})
+       state))))

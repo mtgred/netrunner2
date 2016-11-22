@@ -1,6 +1,6 @@
 (ns netrunner.macros)
 
-(defmacro effect [& expr]
+(defmacro fx [& expr]
   `(fn ~['state 'side 'card 'args]
      ~(let [actions (map #(if (#{:runner :corp} (second %))
                             (concat [(first %) (second %)] (drop 2 %))
@@ -34,9 +34,3 @@
               ~@expr
               (~'trigger-event ~'side ~(keyword name) ~@full-args))
           ~'state)))))
-
-(defmacro afn [name & expr]
-  `(defn ~(symbol (str "resolve-" name)) ~['state 'side 'ability 'card 'options]
-     (if-let [~'v (~(keyword name) ~'ability)]
-       ~@expr
-       ~'state)))

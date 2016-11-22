@@ -2,7 +2,7 @@
   (:use expectations)
   (:require [netrunner.init-test :refer [corp runner]]
             [netrunner.core-test :refer [state create-card add-card]]
-            [netrunner.macros :refer [effect]]
+            [netrunner.macros :refer [fx]]
             [netrunner.core :as c]))
 
 (def state2 (assoc-in state [:corp :click] 4))
@@ -53,7 +53,7 @@
   (expect 1 (count (get-in state4 [:runner :discard]))))
 
 (let [card1 (create-card state2 :runner "Employee Strike" :hand 99)
-      card2 (create-card state2 :corp "Targeted Marketing" :hand 100)
+      card2 (create-card state2 :corp "Corporate Scandal" :hand 100)
       card3 (create-card state2 :corp "Cerebral Static" :hand 100)
       state3 (-> state2
                  (add-card :runner card1)
@@ -63,5 +63,7 @@
       state4 (c/play state3 :corp card2)
       state5 (c/play state4 :corp card3)]
   (expect "Employee Strike" (get-in state3 [:current 0 :title]))
-  (expect "Targeted Marketing" (get-in state4 [:current 0 :title]))
-  (expect "Cerebral Static" (get-in state5 [:current 0 :title])))
+  (expect "Corporate Scandal" (get-in state4 [:current 0 :title]))
+  (expect 1 (get-in state4 [:corp :bad-publicity]))
+  (expect "Cerebral Static" (get-in state5 [:current 0 :title]))
+  (expect 0 (get-in state5 [:corp :bad-publicity])))

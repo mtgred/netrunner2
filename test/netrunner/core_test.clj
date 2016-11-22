@@ -1,7 +1,7 @@
 (ns netrunner.core-test
   (:use expectations)
   (:require [netrunner.init-test :refer [corp runner]]
-            [netrunner.macros :refer [effect]]
+            [netrunner.macros :refer [fx]]
             [netrunner.init :refer [create-game card-data]]
             [netrunner.core :as c]))
 
@@ -36,7 +36,7 @@
   (expect 0 (get-in new-state [:runner :credit]))
   (expect 2 (get-in new-state [:runner :memory])))
 
-(let [new-state ((effect (c/draw 3) (c/gain :credit 1)) state :corp nil nil)]
+(let [new-state ((fx (c/draw 3) (c/gain :credit 1)) state :corp nil nil)]
   (expect 8 (count (get-in new-state [:corp :hand])))
   (expect 6 (get-in new-state [:corp :credit])))
 
@@ -55,7 +55,7 @@
 
 (let [ability {:costs [:credit 2 :memory 1]
                :msg "draw 3 cards and gain 4 [Credits]"
-               :effect (effect (c/draw 3) (c/gain :credit 4))}
+               :effect (fx (c/draw 3) (c/gain :credit 4))}
       new-state (c/res state :runner ability {:title "foobar"})]
   (expect [{:user "__system__", :text "Karen uses foobar to draw 3 cards and gain 4 [Credits]."}]
           (get-in new-state [:log]))
