@@ -84,13 +84,10 @@
            (resolve-effect side ability card options))
        state))))
 
-(defn move [state side card to]
-  (let [zone (if (sequential? to)
-               (concat [side] to)
-               [side to])]
-    (-> state
-        (update-in zone #(conj (vec %) (assoc card :zone zone)))
-        (update-in (:zone card) #(remove-card card %)))))
+(defn move [state card zone]
+  (-> state
+      (update-in zone #(conj (vec %) (assoc card :zone zone)))
+      (update-in (:zone card) #(remove-card card %))))
 
 (defn- move-cards [state side from to n]
   (let [moved (set-zone to (take n (get-in state [side :deck])))]
@@ -108,7 +105,7 @@
 
 (defn trash [state side card]
   (-> state
-      (move side card :discard)
+      (move card [side :discard])
       (deactivate side card)))
 
 (defn get-card [state card zone]
@@ -122,15 +119,15 @@
          ability (update-in ability [:additional-costs]
                             concat (when (has? card :subtype "Double") [:click 1]))]
      (as-> state s
-       (move s side card :play-area)
+       (move s card [side :play-area])
        (res s side ability card)
-       (move s side (get-card s card [side :play-area]) :discard)))))
+       (move s (get-card s card [side :play-area]) [side :discard])))))
 
 (gfn corp-install [card])
 
 (gfn runner-install [card]
      (card-init side card)
-     (move :runner card [:rig (if (:facedown options) :facedown (to-keyword (:type card)))]))
+     (move card [:runner :rig (if (:facedown options) :facedown (to-keyword (:type card)))]))
 
 (gfn click-credit []
      (res side {:costs [:click 1] :effect (effect (gain :credit 1))}))

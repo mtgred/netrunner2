@@ -42,7 +42,7 @@
 
 (let [card (create-card state :corp "Blue Level Clearance" :hand)
       s (add-card state :corp card)
-      new-state (c/move state :corp card :discard)]
+      new-state (c/move state card [:corp :discard])]
   (expect 6 (count (get-in s [:corp :hand])))
   (expect 5 (count (get-in new-state [:corp :hand])))
   (expect 1 (count (get-in new-state [:corp :discard])))
