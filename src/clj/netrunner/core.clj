@@ -124,7 +124,7 @@
      (as-> state s
        (move s side card :play-area)
        (res s side ability card)
-       (move s side (get-card s side card :play-area) :discard)))))
+       (move s side (get-card s card [side :play-area]) :discard)))))
 
 (gfn corp-install [card])
 
